@@ -1,112 +1,67 @@
 import random
 
+def innings(batter, to_chase):
+    print("Enter numbers between 1 and 6. If you both choose the same number then " + batter + " is out")
+    total = 0
+
+    while True:
+        pnum = input_num(1, 6)
+        cnum = random.randint(1, 6)
+
+        print("User chose", pnum)
+        print("Computer chose", cnum)
+
+        if pnum == cnum:
+            print(batter + " is out")
+            return total
+        else:
+            total = total + (pnum if batter == "User" else cnum)
+            print(batter + " score is", total)
+            if to_chase is not None and total > to_chase:
+                return total
+
+def input_num(min, max):
+    num = int(input())
+
+    if num > max or num < min:
+        print("Enter valid choice")
+        return input_num(min, max)
+    else:
+        return num
+
 print("Time for toss, Enter 0 for Heads and 1 for Tails")
-choice = int(input())
-k = random.randint(0, 1)
-if k == choice:
+choice = input_num(0, 1)
+coin = random.randint(0, 1)
+player_bowls = False
+
+if coin == choice:
     print("You have won the toss")
-    print("Select 0 to bat , 1 to bowl ")
-    ch = int(input())
-    if ch == 1:
+    print("Select 0 to bat, 1 to bowl ")
+    player_bowls = input_num(0, 1) == 1
+
+    if player_bowls:
         print("You chose to bowl")
-        r = 0
     else:
         print("You chose to bat")
-        r = 1
 else:
     print("Computer won the toss")
-    r = random.randint(0, 1)
-    if r == 0:
+    player_bowls = random.randint(0, 1) == 1
+
+    if player_bowls:
         print("Computer chose to bat")
-        ch = 1
     else:
         print("Computer chose to bowl")
-        ch = 0
 
-if ch == 1 and r == 0:
-    print("Enter numbers between 1 and 6. If you both choose the same number then computer is out")
-    sum = 0
-    out = 0
-    while out != 1:
-        bowl1 = int(input())
-        if bowl1 > 6 or bowl1 == 0:
-            print("Enter valid choice")
-            continue
-        r1 = random.randint(1,6)
-        print("User chose ", bowl1)
-        print("Computer chose ", r1)
-        if r1 != bowl1:
-            sum = sum + r1
-            print("Computer score is ", sum)
-        else:
-            print("Computer is out")
-            print("Final computer score is ", sum)
-            out = 1
+if player_bowls:
+    comp_score = innings("Computer", None)
+    user_score = innings("User", comp_score)
+else:
+    user_score = innings("User", None)
+    comp_score = innings("Computer", user_score)
 
-    print("Enter numbers between 1 and 6. If you both choose the same number then user is out")
-    sum1 = 0
-    out1 = 0
-    while out1 != 1:
-        bat1 = int(input())
-        if bat1 > 6 or bat1 == 0:
-            print("Enter valid choice")
-            continue
-        r1 = random.randint(1,6)
-        print("User chose ", bat1)
-        print("Computer chose ", r1)
-        if r1 != bat1:
-            sum1 = sum1 + bat1
-            print("User score is ", sum1)
-            if sum1 > sum:
-                break
-        else:
-            print("User is out")
-            print("Final user score is ", sum1)
-            out1 = 1
-    if sum1 > sum:
-        print("User win")
-    elif sum > sum1:
-        print("Computer wins")
-    else:
-        print("Match draw")
-
-elif ch == 0 and r == 1:
-    print("Enter numbers between 1 and 6 .If you both choose the same number then user is out")
-    sum = 0
-    out = 0
-    while out != 1:
-        bat1 = int(input())
-        r1 = random.randint(1,6)
-        print("User chose ", bat1)
-        print("Computer chose ", r1)
-        if r1 != bat1:
-            sum = sum + bat1
-            print("User score is ", sum)
-        else:
-            print("User is out")
-            print("Final user score is ", sum)
-            out = 1
-
-    print("Enter numbers between 1 and 6. If you both choose the same number then computer is out")
-    sum1 = 0
-    out1 = 0
-    while out1 != 1:
-        bat1 = int(input())
-        r1 = random.randint(1,6)
-        print("User chose ", bat1)
-        print("Computer chose ", r1)
-        if r1 != bat1:
-            sum1 = sum1 + r1
-            print("Computer score is ", sum1)
-            if sum1 > sum:
-                break
-        else:
-            print("Computer is out")
-            print("Final computer score is ", sum1)
-            out1 = 1
-    if sum1 < sum:
-        print("User win")
-    elif sum < sum1:
-        print("Computer wins")
-    else:
-        print("Match draw")
+if comp_score < user_score:
+    print("User wins")
+elif user_score < comp_score:
+    print("Computer wins")
+else:
+    print("Match draw")
